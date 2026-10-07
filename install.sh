@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Pemasang DeskWidgets. Tanpa sudo. Aman dijalankan ulang (memperbarui).
 #
-#   curl -fsSL https://raw.githubusercontent.com/OWNER/DeskWidgets/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh | bash
 #   ... | bash -s -- --version 1.0.0 --no-launch
 #   ... | bash -s -- --uninstall
 #
-# Ganti OWNER/DeskWidgets lewat env DESKWIDGETS_REPO bila repo berbeda.
+# Untuk fork, set env DESKWIDGETS_REPO=pemilik/repo (di sisi `bash`, setelah pipe).
 set -euo pipefail
 
-REPO="${DESKWIDGETS_REPO:-OWNER/DeskWidgets}"
+REPO="${DESKWIDGETS_REPO:-KeiRey/mac-widget}"
 APP_NAME="DeskWidgets"
 DEST_DIR="$HOME/Applications"
 DEST="$DEST_DIR/$APP_NAME.app"
@@ -64,7 +64,6 @@ fi
 MACOS_MAJOR="$(sw_vers -productVersion | cut -d. -f1)"
 [ "$MACOS_MAJOR" -ge 13 ] || fail "Dibutuhkan macOS 13 (Ventura) atau lebih baru. Versi Anda: $(sw_vers -productVersion)."
 case "$(uname -m)" in arm64|x86_64) ;; *) fail "Arsitektur tidak didukung: $(uname -m)" ;; esac
-[ "$REPO" != "OWNER/DeskWidgets" ] || fail "Repo belum diatur. Jalankan dengan DESKWIDGETS_REPO=pemilik/repo atau edit variabel REPO di skrip."
 
 # 2. Tentukan versi
 if [ -z "$VERSION" ]; then

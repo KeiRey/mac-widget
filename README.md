@@ -70,19 +70,18 @@ Aplikasi ini ditandatangani **ad-hoc** (tanpa notarization). Jika macOS menolak 
 Skrip `install.sh` mengunduh rilis dari GitHub, memverifikasi checksum SHA-256, memasang ke `~/Applications` (tanpa `sudo`), lalu membuka aplikasi:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh \
-  | DESKWIDGETS_REPO=KeiRey/mac-widget bash
+curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh | bash
 ```
 
 Opsi:
 
 ```bash
-... | DESKWIDGETS_REPO=KeiRey/mac-widget bash -s -- --version 1.0.0   # versi tertentu
-... | DESKWIDGETS_REPO=KeiRey/mac-widget bash -s -- --no-launch       # jangan buka setelah pasang
-... | DESKWIDGETS_REPO=KeiRey/mac-widget bash -s -- --uninstall       # hapus aplikasi
+curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh | bash -s -- --version 1.0.0   # versi tertentu
+curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh | bash -s -- --no-launch       # jangan buka setelah pasang
+curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh | bash -s -- --uninstall       # hapus aplikasi
 ```
 
-Skrip ini idempoten (dijalankan ulang berarti memperbarui) dan hanya berfungsi setelah ada rilis di GitHub: push tag `vX.Y.Z` dan workflow `.github/workflows/release.yml` membuat zip serta checksum-nya. Tanpa `DESKWIDGETS_REPO`, skrip berhenti dengan pesan yang jelas.
+Skrip ini idempoten (dijalankan ulang berarti memperbarui) dan hanya berfungsi setelah ada **rilis** di GitHub berisi `DeskWidgets-vX.Y.Z-macos-universal.zip` dan berkas `.sha256`-nya (lihat [Rilis dan uninstall](#rilis-dan-uninstall)). Untuk fork, set `DESKWIDGETS_REPO=pemilik/repo` di sisi `bash`, mis. `curl ... | DESKWIDGETS_REPO=pemilik/repo bash`.
 
 ## Cara pakai
 
@@ -252,15 +251,14 @@ scripts/release.sh 1.0.0              # build universal + zip + sha256 di dist/
 scripts/release.sh 1.0.0 --publish    # juga membuat GitHub Release (butuh gh CLI)
 ```
 
-Push tag `v*` juga memicu workflow GitHub Actions yang membangun dan mengunggah rilis.
+Push tag `v*` juga memicu workflow GitHub Actions yang membangun dan mengunggah rilis. Karena kode memakai API Liquid Glass macOS 26, runner CI harus punya Xcode 26 atau lebih baru; kalau tidak, build di CI gagal. Cara paling pasti untuk rilis pertama adalah `scripts/release.sh X.Y.Z --publish` dari Mac Anda sendiri.
 
 Menghapus aplikasi:
 
 ```bash
 ./uninstall.sh
 # atau tanpa clone:
-curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh \
-  | DESKWIDGETS_REPO=KeiRey/mac-widget bash -s -- --uninstall
+curl -fsSL https://raw.githubusercontent.com/KeiRey/mac-widget/main/install.sh | bash -s -- --uninstall
 ```
 
 Skrip menghentikan aplikasi, mencabut item login, menghapus `.app`, dan menanyakan apakah data di Application Support ikut dihapus.
